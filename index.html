@@ -1,0 +1,2121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatties - Chat Story Maker</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Roboto:wght@300;400;500&family=Poppins:wght@300;400;500&family=Dancing+Script:wght@400;600&family=Courier+New&display=swap">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 20px;
+      transition: all 0.3s ease;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    /* Welcome Screen */
+    .welcome-screen {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 50px 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      margin-top: 100px;
+    }
+
+    .welcome-screen h1 {
+      font-size: 48px;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .welcome-screen p {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .welcome-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .welcome-btn {
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: 500;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 180px;
+    }
+
+    .welcome-btn.primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .welcome-btn.secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .welcome-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .main-nav {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .back-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+
+    .controls {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    .control-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .characters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .character-card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      background: white;
+      position: relative;
+    }
+
+    .character-remove {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .character-preview {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #666;
+      overflow: hidden;
+    }
+
+    .character-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .character-name, .character-photo {
+      font-size: 12px;
+      margin-bottom: 5px;
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .add-character-btn {
+      border: 2px dashed #007bff;
+      background: rgba(0, 123, 255, 0.05);
+      color: #007bff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      min-height: 140px;
+    }
+
+    .story-list {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .story-item, .chapter-item {
+      padding: 8px;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .story-item:hover, .chapter-item:hover {
+      background: #f0f0f0;
+    }
+
+    .story-item.active, .chapter-item.active {
+      background: #007bff;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      padding: 2px 6px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .chat-container {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      padding: 15px;
+      height: 450px;
+      overflow-y: auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 15px;
+    }
+
+    .message-wrapper {
+      display: flex;
+      align-items: flex-end;
+      margin: 12px 0;
+      animation: slideIn 0.3s ease;
+      position: relative;
+    }
+
+    .message-wrapper:hover .message-actions {
+      opacity: 1;
+    }
+
+    .message-wrapper.right {
+      flex-direction: row-reverse;
+    }
+
+    .message-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 75%;
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+      padding: 0 5px;
+    }
+
+    .message-wrapper.right .message-header {
+      flex-direction: row-reverse;
+    }
+
+    .character-name-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      opacity: 0.8;
+    }
+
+    .message-timestamp {
+      font-size: 10px;
+      color: #888;
+      opacity: 0.7;
+    }
+
+    .theme-night .character-name-label {
+      color: #bbb;
+    }
+
+    .theme-night .message-timestamp {
+      color: #999;
+    }
+
+    .message-actions {
+      position: absolute;
+      top: -5px;
+      right: 5px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      display: flex;
+      gap: 2px;
+    }
+
+    .message-wrapper.right .message-actions {
+      right: auto;
+      left: 5px;
+    }
+
+    .action-btn {
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      border-radius: 3px;
+      padding: 2px 4px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      margin: 0 8px;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #666;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .bubble {
+      max-width: 75%;
+      padding: 12px 16px;
+      border-radius: 20px;
+      line-height: 1.4em;
+      word-wrap: break-word;
+      position: relative;
+    }
+
+    .bubble img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 5px 0;
+    }
+
+    .message-image {
+      max-width: 200px;
+      border-radius: 8px;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .left .bubble {
+      background: #e8e8e8;
+      text-align: left;
+      border-bottom-left-radius: 5px;
+    }
+
+    .right .bubble {
+      background: #007bff;
+      color: white;
+      text-align: left;
+      border-bottom-right-radius: 5px;
+    }
+
+    /* Theme variations */
+    .theme-pastel .left .bubble {
+      background: linear-gradient(135deg, #ffe0e9, #ffd0e1);
+      color: #5a4a5a;
+    }
+
+    .theme-pastel .right .bubble {
+      background: linear-gradient(135deg, #ffe8cc, #ffd6a8);
+      color: #6b4e3d;
+    }
+
+    .theme-night .chat-container {
+      background-color: rgba(30, 30, 40, 0.95);
+    }
+
+    .theme-night .left .bubble {
+      background: linear-gradient(135deg, #444, #555);
+      color: #eee;
+    }
+
+    .theme-night .right .bubble {
+      background: linear-gradient(135deg, #663399, #7b4397);
+      color: #fff;
+    }
+
+    .theme-ocean .left .bubble {
+      background: linear-gradient(135deg, #a8e6cf, #88d8c0);
+      color: #2c5f41;
+    }
+
+    .theme-ocean .right .bubble {
+      background: linear-gradient(135deg, #4a90e2, #357abd);
+      color: white;
+    }
+
+    .theme-sunset .left .bubble {
+      background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+      color: #6c5ce7;
+    }
+
+    .theme-sunset .right .bubble {
+      background: linear-gradient(135deg, #fd79a8, #e84393);
+      color: white;
+    }
+
+    .theme-forest .left .bubble {
+      background: linear-gradient(135deg, #c3f0ca, #a8d8a8);
+      color: #2d5016;
+    }
+
+    .theme-forest .right .bubble {
+      background: linear-gradient(135deg, #6b8e23, #8fbc8f);
+      color: white;
+    }
+
+    .theme-cosmic .left .bubble {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .theme-cosmic .right .bubble {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+    }
+
+    .theme-retro .left .bubble {
+      background: linear-gradient(135deg, #ff9a9e, #fecfef);
+      color: #8b0000;
+    }
+
+    .theme-retro .right .bubble {
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      color: #8b4513;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    input, select, button, textarea {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+
+    input {
+      flex: 1;
+    }
+
+    textarea {
+      flex: 1;
+      min-height: 40px;
+      resize: vertical;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      min-width: 80px;
+    }
+
+    button:hover {
+      background: #0056b3;
+      transform: translateY(-1px);
+    }
+
+    .clear-btn {
+      background: #dc3545;
+    }
+
+    .clear-btn:hover {
+      background: #c82333;
+    }
+
+    .export-btn {
+      background: #28a745;
+    }
+
+    .export-btn:hover {
+      background: #218838;
+    }
+
+    .save-btn {
+      background: #17a2b8;
+    }
+
+    .save-btn:hover {
+      background: #138496;
+    }
+
+    .font-indie {
+      font-family: 'Indie Flower', cursive;
+    }
+
+    .font-roboto {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .font-poppins {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .font-dancing {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    .font-courier {
+      font-family: 'Courier New', monospace;
+    }
+
+    .story-title {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .story-title input {
+      font-size: 18px;
+      font-weight: 500;
+      text-align: center;
+      border: none;
+      background: transparent;
+      width: 100%;
+    }
+
+    .preset-backgrounds {
+      display: flex;
+      gap: 5px;
+      margin-top: 5px;
+      flex-wrap: wrap;
+    }
+
+    .bg-preset {
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .bg-preset:hover {
+      border-color: #007bff;
+      transform: scale(1.1);
+    }
+
+    .bg-preset.nature { background: linear-gradient(45deg, #4CAF50, #8BC34A); }
+    .bg-preset.city { background: linear-gradient(45deg, #607D8B, #455A64); }
+    .bg-preset.space { background: linear-gradient(45deg, #1a1a2e, #16213e); }
+    .bg-preset.beach { background: linear-gradient(45deg, #00BCD4, #FFEB3B); }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .export-options {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .export-video-btn {
+      background: #6f42c1;
+    }
+
+    .export-video-btn:hover {
+      background: #5a359a;
+    }
+
+    .export-image-btn {
+      background: #fd7e14;
+    }
+
+    .export-image-btn:hover {
+      background: #e8690b;
+    }
+
+    .character-position-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      padding: 8px;
+      background: #f8f9fa;
+      border-radius: 5px;
+    }
+
+    .character-position-control label {
+      margin: 0;
+      font-weight: normal;
+      min-width: 80px;
+    }
+
+    .position-select {
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+
+    .scene-description {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border: none;
+      border-left: 4px solid #6f42c1;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 0 10px 10px 0;
+      font-style: italic;
+      color: #6f42c1;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 2px 10px rgba(111, 66, 193, 0.1);
+    }
+
+    .scene-description::before {
+      content: "📝";
+      position: absolute;
+      left: -2px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #6f42c1;
+      color: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .scene-description .scene-actions {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .scene-description:hover .scene-actions {
+      opacity: 1;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .app-content {
+      display: none;
+    }
+
+    .app-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body class="font-roboto">
+  <!-- Welcome Screen -->
+  <div id="welcomeScreen" class="welcome-screen">
+    <h1>Chatties</h1>
+    <p>Create amazing chat stories with customizable characters, themes, and backgrounds. Share your stories with friends or export them as images and videos!</p>
+    <div class="welcome-buttons">
+      <button class="welcome-btn primary" onclick="showMyChatties()">My Chatties</button>
+      <button class="welcome-btn secondary" onclick="showNewChatties()">New Chatties</button>
+    </div>
+  </div>
+
+  <!-- Main App Content -->
+  <div id="appContent" class="container app-content">
+    <div class="story-title">
+      <input type="text" id="storyTitle" placeholder="Enter your story title..." value="My Chat Story">
+    </div>
+
+    <div class="main-nav" id="mainNav">
+      <button class="back-btn" onclick="showWelcome()">← Back to Home</button>
+      <button class="nav-btn active" onclick="showSection('stories')">Stories</button>
+    </div>
+
+    <div class="main-nav" id="storyNav" style="display: none;">
+      <button class="back-btn" onclick="backToStories()">← Back to Stories</button>
+      <button class="nav-btn" onclick="showSection('cover')">Cover</button>
+      <button class="nav-btn" onclick="showSection('characters')">Characters</button>
+      <button class="nav-btn" onclick="showSection('customization')">Customization</button>
+      <button class="nav-btn" onclick="showSection('chapters')">Chapters</button>
+    </div>
+
+    <!-- Stories List Section -->
+    <div id="stories" class="section active">
+      <div class="controls">
+        <div class="control-group" id="storiesContainer">
+          <div id="myChattiesView" style="display: none;">
+            <label>My Chatties:</label>
+            <div class="story-list" id="storyList"></div>
+          </div>
+          
+          <div id="newChattiesView" style="display: none;">
+            <label>Create New Story:</label>
+            <div class="control-row">
+              <input type="text" id="newStoryName" placeholder="Enter story title...">
+              <button onclick="createNewStory()">Create Story</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cover Section -->
+    <div id="cover" class="section">
+      <div class="controls">
+        <div class="control-group">
+          <label>Story Cover:</label>
+          <div class="control-row">
+            <input type="text" id="coverTitle" placeholder="Story title..." onchange="updateStoryTitle()">
+          </div>
+          <div class="control-row" style="margin-top: 10px;">
+            <input type="text" id="coverImage" placeholder="Cover image URL...">
+            <button onclick="updateCoverImage()">Apply URL</button>
+          </div>
+          <div class="control-row" style="margin-top: 5px;">
+            <input type="file" id="coverUpload" accept="image/*" onchange="handleCoverUpload(this)">
+            <button onclick="document.getElementById('coverUpload').click()">Upload Cover</button>
+          </div>
+          <div id="coverPreview" style="margin-top: 15px; text-align: center;">
+            <div style="width: 200px; height: 300px; border: 2px dashed #ddd; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+              <span style="color: #999;">Cover Preview</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapters Section -->
+    <div id="chapters" class="section">
+      <div class="controls">
+        <div class="control-group">
+          <label>Chapters:</label>
+          <div class="story-list" id="chapterList"></div>
+          <div class="control-row">
+            <input type="text" id="newChapterName" placeholder="New chapter name...">
+            <button onclick="addChapter()">Add Chapter</button>
+          </div>
+        </div>
+        <div class="control-row" style="margin-top: 15px;">
+          <button onclick="editChapter()" disabled id="editChapterBtn">Edit Selected Chapter</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Characters Section -->
+    <div id="characters" class="section">
+      <div class="controls">
+        <div class="control-group">
+          <label>Characters:</label>
+          <div class="characters-grid" id="charactersGrid">
+            <div class="character-card add-character-btn" onclick="addCharacter()">
+              + Add Character
+            </div>
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <label>Character Positioning:</label>
+          <div id="characterPositions">
+            <!-- Character position controls will be generated here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customization Section -->
+    <div id="customization" class="section">
+      <div class="controls">
+        <div class="control-group">
+          <label>Font Style:</label>
+          <select id="fontSelect">
+            <option value="roboto">Roboto</option>
+            <option value="indie">Indie Flower</option>
+            <option value="poppins">Poppins</option>
+            <option value="dancing">Dancing Script</option>
+            <option value="courier">Courier New</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Theme:</label>
+          <select id="themeSelect">
+            <option value="default">Default</option>
+            <option value="pastel">Pastel</option>
+            <option value="night">Night</option>
+            <option value="ocean">Ocean</option>
+            <option value="sunset">Sunset</option>
+            <option value="forest">Forest</option>
+            <option value="cosmic">Cosmic</option>
+            <option value="retro">Retro</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Background:</label>
+          <div class="control-row">
+            <input type="text" id="bgInput" placeholder="Image URL..." style="flex: 1;">
+            <button onclick="updateBackground()">Apply URL</button>
+          </div>
+          <div class="control-row" style="margin-top: 10px;">
+            <input type="file" id="bgUpload" accept="image/*" onchange="handleBackgroundUpload(this)" style="flex: 1;">
+            <button onclick="document.getElementById('bgUpload').click()">Upload Background</button>
+          </div>
+          <div class="preset-backgrounds">
+            <div class="bg-preset nature" onclick="setPresetBackground('nature')" title="Nature"></div>
+            <div class="bg-preset city" onclick="setPresetBackground('city')" title="City"></div>
+            <div class="bg-preset space" onclick="setPresetBackground('space')" title="Space"></div>
+            <div class="bg-preset beach" onclick="setPresetBackground('beach')" title="Beach"></div>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <button class="save-btn" onclick="saveCustomization()">Save Customization</button>
+          <button onclick="loadCustomization()">Load Customization</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Editor Section -->
+    <div id="chat" class="section">
+      <div class="chat-container" id="chatContainer"></div>
+
+      <div class="input-area">
+        <textarea id="chatInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)"></textarea>
+        <input type="file" id="imageInput" accept="image/*" onchange="handleImageUpload(this)" style="display: none;">
+        <button onclick="document.getElementById('imageInput').click()">📷</button>
+        <select id="sideSelect">
+          <option value="character_0">Character 1</option>
+        </select>
+        <button onclick="addBubble()">Send</button>
+        <button onclick="toggleSceneMode()" id="sceneModeBtn">📝 Scene</button>
+      </div>
+      
+      <div class="input-area" id="sceneInputArea" style="display: none;">
+        <textarea id="sceneInput" placeholder="Describe the scene or add narration..." style="background: #f8f9fa; border-left: 4px solid #6f42c1;"></textarea>
+        <button onclick="addSceneDescription()">Add Scene</button>
+        <button onclick="toggleSceneMode()">Cancel</button>
+      </div>
+
+      <div class="input-area">
+        <button class="clear-btn" onclick="clearChat()">Clear Chat</button>
+        <div class="export-options">
+          <button class="export-btn" onclick="exportStory()">Export Text</button>
+          <button class="export-image-btn" onclick="exportAsImage()">Export as Image</button>
+          <button class="export-video-btn" onclick="showVideoExportModal()">Export as Video</button>
+          <button class="export-video-btn" onclick="previewVideoExport()">Preview Video</button>
+        </div>
+        <button class="save-btn" onclick="saveCurrentChapter()">Save Chapter</button>
+      </div>
+      
+      <div class="input-area">
+        <button onclick="previousChapter()" id="prevChapterBtn" disabled>← Previous Chapter</button>
+        <button onclick="nextChapter()" id="nextChapterBtn" disabled>Next Chapter →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Message Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h3>Edit Message</h3>
+      <textarea id="editTextarea" style="width: 100%; height: 100px;"></textarea>
+      <div style="margin-top: 10px;">
+        <button onclick="saveEditedMessage()">Save</button>
+        <button onclick="closeEditModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Export Settings Modal -->
+  <div id="videoExportModal" class="modal">
+    <div class="modal-content">
+      <h3>Video Export Settings</h3>
+      <div class="control-group">
+        <label>Message Display Speed (seconds per message):</label>
+        <input type="range" id="messageSpeed" min="0.5" max="5" step="0.1" value="2">
+        <span id="speedValue">2.0s</span>
+      </div>
+      <div class="control-group">
+        <label>Scene Description Duration (seconds):</label>
+        <input type="range" id="sceneSpeed" min="1" max="10" step="0.5" value="3">
+        <span id="sceneSpeedValue">3.0s</span>
+      </div>
+      <div class="control-group">
+        <label>Typing Animation:</label>
+        <input type="checkbox" id="typingAnimation" checked>
+        <span>Show typing indicator</span>
+      </div>
+      <div class="control-group">
+        <label>Background Music:</label>
+        <select id="backgroundMusic">
+          <option value="none">None</option>
+          <option value="calm">Calm</option>
+          <option value="upbeat">Upbeat</option>
+          <option value="dramatic">Dramatic</option>
+        </select>
+      </div>
+      <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button class="export-video-btn" onclick="startVideoExport()">Export Video</button>
+        <button class="export-video-btn" onclick="previewVideoExport()">Preview</button>
+        <button onclick="closeVideoExportModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentStory = null;
+    let currentChapter = null;
+    let stories = JSON.parse(localStorage.getItem('chatStories')) || {};
+    let characters = JSON.parse(localStorage.getItem('characters')) || [
+      { id: 'character_0', name: 'Alex', photo: '', position: 'left' },
+      { id: 'character_1', name: 'Sam', photo: '', position: 'right' }
+    ];
+    let characterPositions = JSON.parse(localStorage.getItem('characterPositions')) || {};
+    let editingMessageElement = null;
+    let pendingImage = null;
+    let isSceneMode = false;
+
+    function showWelcome() {
+      document.getElementById('welcomeScreen').style.display = 'block';
+      document.getElementById('appContent').classList.remove('active');
+    }
+
+    function showMyChatties() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('appContent').classList.add('active');
+      document.getElementById('myChattiesView').style.display = 'block';
+      document.getElementById('newChattiesView').style.display = 'none';
+      showSection('stories');
+      refreshStoryList();
+    }
+
+    function showNewChatties() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('appContent').classList.add('active');
+      document.getElementById('myChattiesView').style.display = 'none';
+      document.getElementById('newChattiesView').style.display = 'block';
+      showSection('stories');
+    }
+
+    function showSection(sectionName) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      
+      document.getElementById(sectionName).classList.add('active');
+      if (event && event.target) {
+        event.target.classList.add('active');
+      }
+      
+      if (sectionName === 'stories') {
+        refreshStoryList();
+      } else if (sectionName === 'characters') {
+        refreshCharacters();
+      } else if (sectionName === 'chapters') {
+        refreshChapterList();
+      }
+    }
+
+    function createNewStory() {
+      const name = document.getElementById('newStoryName').value.trim();
+      if (!name) {
+        alert('Please enter a story title');
+        return;
+      }
+      
+      stories[name] = { 
+        chapters: {},
+        cover: { title: name, image: '' },
+        characters: [...characters]
+      };
+      currentStory = name;
+      document.getElementById('newStoryName').value = '';
+      document.getElementById('storyTitle').value = name;
+      document.getElementById('coverTitle').value = name;
+      saveStories();
+      
+      // Switch to story editing mode
+      document.getElementById('mainNav').style.display = 'none';
+      document.getElementById('storyNav').style.display = 'flex';
+      showSection('cover');
+    }
+
+    function backToStories() {
+      currentStory = null;
+      currentChapter = null;
+      document.getElementById('mainNav').style.display = 'flex';
+      document.getElementById('storyNav').style.display = 'none';
+      showSection('stories');
+      clearChatDisplay();
+    }
+
+    function updateStoryTitle() {
+      if (currentStory) {
+        const newTitle = document.getElementById('coverTitle').value;
+        if (stories[currentStory]) {
+          stories[currentStory].cover.title = newTitle;
+          document.getElementById('storyTitle').value = newTitle;
+          saveStories();
+        }
+      }
+    }
+
+    function updateCoverImage() {
+      if (currentStory) {
+        const imageUrl = document.getElementById('coverImage').value;
+        if (stories[currentStory]) {
+          stories[currentStory].cover.image = imageUrl;
+          updateCoverPreview();
+          saveStories();
+        }
+      }
+    }
+
+    function handleCoverUpload(input) {
+      const file = input.files[0];
+      if (file && file.type.startsWith('image/') && currentStory) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const dataUrl = e.target.result;
+          document.getElementById('coverImage').value = dataUrl;
+          stories[currentStory].cover.image = dataUrl;
+          updateCoverPreview();
+          saveStories();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function updateCoverPreview() {
+      const preview = document.getElementById('coverPreview');
+      const imageUrl = document.getElementById('coverImage').value;
+      
+      if (imageUrl.trim()) {
+        preview.innerHTML = `<img src="${imageUrl}" style="max-width: 200px; max-height: 300px; border-radius: 10px;" onerror="this.parentElement.innerHTML='<div style=\\'width: 200px; height: 300px; border: 2px dashed #ddd; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 10px;\\'>Invalid Image</div>'">`;
+      } else {
+        preview.innerHTML = `<div style="width: 200px; height: 300px; border: 2px dashed #ddd; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 10px;"><span style="color: #999;">Cover Preview</span></div>`;
+      }
+    }
+
+    function editChapter() {
+      if (currentChapter) {
+        showSection('chat');
+        loadChapterData();
+        updateChapterNavigation();
+      }
+    }
+
+    function addCharacter() {
+      const newId = 'character_' + Date.now();
+      const newCharacter = {
+        id: newId,
+        name: 'New Character',
+        photo: '',
+        position: characters.length % 2 === 0 ? 'left' : 'right'
+      };
+      characters.push(newCharacter);
+      saveCharacters();
+      refreshCharacters();
+      updateCharacterSelect();
+    }
+
+    function updateCharacterPosition(id, position) {
+      const character = characters.find(char => char.id === id);
+      if (character) {
+        character.position = position;
+        saveCharacters();
+      }
+    }
+
+    function toggleSceneMode() {
+      isSceneMode = !isSceneMode;
+      const chatInputArea = document.querySelector('.input-area');
+      const sceneInputArea = document.getElementById('sceneInputArea');
+      const sceneModeBtn = document.getElementById('sceneModeBtn');
+      
+      if (isSceneMode) {
+        chatInputArea.style.display = 'none';
+        sceneInputArea.style.display = 'flex';
+        sceneModeBtn.textContent = '💬 Chat';
+      } else {
+        chatInputArea.style.display = 'flex';
+        sceneInputArea.style.display = 'none';
+        sceneModeBtn.textContent = '📝 Scene';
+      }
+    }
+
+    function addSceneDescription() {
+      const sceneText = document.getElementById('sceneInput').value.trim();
+      if (!sceneText) return;
+      
+      const chatContainer = document.getElementById('chatContainer');
+      const sceneElement = document.createElement('div');
+      sceneElement.className = 'scene-description';
+      sceneElement.innerHTML = `
+        <div class="scene-actions">
+          <button class="action-btn" onclick="editSceneDescription(this)">Edit</button>
+          <button class="action-btn" onclick="deleteSceneDescription(this)">Delete</button>
+        </div>
+        ${sceneText}
+      `;
+      
+      chatContainer.appendChild(sceneElement);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      
+      document.getElementById('sceneInput').value = '';
+      toggleSceneMode();
+    }
+
+    function editSceneDescription(button) {
+      const sceneElement = button.closest('.scene-description');
+      const currentText = sceneElement.textContent.trim();
+      
+      const newText = prompt('Edit scene description:', currentText);
+      if (newText !== null && newText.trim() !== '') {
+        sceneElement.innerHTML = `
+          <div class="scene-actions">
+            <button class="action-btn" onclick="editSceneDescription(this)">Edit</button>
+            <button class="action-btn" onclick="deleteSceneDescription(this)">Delete</button>
+          </div>
+          ${newText.trim()}
+        `;
+      }
+    }
+
+    function deleteSceneDescription(button) {
+      if (confirm('Delete this scene description?')) {
+        const sceneElement = button.closest('.scene-description');
+        sceneElement.remove();
+      }
+    }
+
+    function removeCharacter(id) {
+      if (characters.length <= 2) {
+        alert('You need at least 2 characters for a chat story!');
+        return;
+      }
+      characters = characters.filter(char => char.id !== id);
+      saveCharacters();
+      refreshCharacters();
+      updateCharacterSelect();
+    }
+
+    function refreshCharacters() {
+      const grid = document.getElementById('charactersGrid');
+      const positionsContainer = document.getElementById('characterPositions');
+      grid.innerHTML = '';
+      positionsContainer.innerHTML = '';
+      
+      characters.forEach(character => {
+        const card = document.createElement('div');
+        card.className = 'character-card';
+        card.innerHTML = `
+          <button class="character-remove" onclick="removeCharacter('${character.id}')">×</button>
+          <div class="character-preview" id="preview_${character.id}">👤</div>
+          <input type="text" class="character-name" value="${character.name}" 
+                 onchange="updateCharacterName('${character.id}', this.value)">
+          <input type="text" class="character-photo" placeholder="Photo URL..." 
+                 value="${character.photo}" onchange="updateCharacterPhoto('${character.id}', this.value)">
+          <input type="file" accept="image/*" onchange="handleCharacterFileUpload('${character.id}', this)" 
+                 style="font-size: 10px; margin-top: 3px;">
+        `;
+        grid.appendChild(card);
+        updateCharacterPreview(character.id);
+        
+        // Add position control
+        const positionControl = document.createElement('div');
+        positionControl.className = 'character-position-control';
+        positionControl.innerHTML = `
+          <label>${character.name}:</label>
+          <select class="position-select" onchange="updateCharacterPosition('${character.id}', this.value)">
+            <option value="left" ${character.position === 'left' ? 'selected' : ''}>Left Side</option>
+            <option value="right" ${character.position === 'right' ? 'selected' : ''}>Right Side</option>
+          </select>
+        `;
+        positionsContainer.appendChild(positionControl);
+      });
+
+      const addCard = document.createElement('div');
+      addCard.className = 'character-card add-character-btn';
+      addCard.innerHTML = '+ Add Character';
+      addCard.onclick = addCharacter;
+      grid.appendChild(addCard);
+    }
+
+    function updateCharacterName(id, name) {
+      const character = characters.find(char => char.id === id);
+      if (character) {
+        character.name = name;
+        saveCharacters();
+        updateCharacterSelect();
+      }
+    }
+
+    function updateCharacterPhoto(id, photo) {
+      const character = characters.find(char => char.id === id);
+      if (character) {
+        character.photo = photo;
+        saveCharacters();
+        updateCharacterPreview(id);
+      }
+    }
+
+    function updateCharacterPreview(id) {
+      const character = characters.find(char => char.id === id);
+      const preview = document.getElementById('preview_' + id);
+      if (!character || !preview) return;
+      
+      if (character.photo.trim() !== '') {
+        preview.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = character.photo;
+        img.onerror = function() { 
+          preview.innerHTML = '👤'; 
+        };
+        preview.appendChild(img);
+      } else {
+        preview.innerHTML = '👤';
+      }
+    }
+
+    function handleCharacterFileUpload(id, input) {
+      const file = input.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          updateCharacterPhoto(id, e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function updateCharacterSelect() {
+      const select = document.getElementById('sideSelect');
+      select.innerHTML = '';
+      characters.forEach(character => {
+        const option = document.createElement('option');
+        option.value = character.id;
+        option.textContent = character.name;
+        select.appendChild(option);
+      });
+    }
+
+    function saveCharacters() {
+      localStorage.setItem('characters', JSON.stringify(characters));
+    }
+
+    function addStory() {
+      const name = document.getElementById('newStoryName').value.trim();
+      if (!name) return;
+      
+      stories[name] = { chapters: {} };
+      document.getElementById('newStoryName').value = '';
+      saveStories();
+      refreshStoryList();
+    }
+
+    function addChapter() {
+      if (!currentStory) {
+        alert('Please select a story first');
+        return;
+      }
+      
+      const name = document.getElementById('newChapterName').value.trim();
+      if (!name) return;
+      
+      stories[currentStory].chapters[name] = { messages: [], customization: {} };
+      document.getElementById('newChapterName').value = '';
+      saveStories();
+      refreshChapterList();
+    }
+
+    function refreshStoryList() {
+      const list = document.getElementById('storyList');
+      list.innerHTML = '';
+      
+      if (Object.keys(stories).length === 0) {
+        list.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">No chatties yet</div>';
+        return;
+      }
+      
+      Object.keys(stories).forEach(storyName => {
+        const story = stories[storyName];
+        const item = document.createElement('div');
+        item.className = 'story-item';
+        if (storyName === currentStory) item.classList.add('active');
+        
+        const coverImage = story.cover && story.cover.image ? 
+          `<img src="${story.cover.image}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 5px; margin-right: 10px;" onerror="this.style.display='none'">` : 
+          '<div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 5px; margin-right: 10px; display: flex; align-items: center; justify-content: center; font-size: 12px;">📖</div>';
+        
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; flex: 1;" onclick="selectStory('${storyName}')">
+            ${coverImage}
+            <span>${storyName}</span>
+          </div>
+          <button class="delete-btn" onclick="deleteStory('${storyName}')">Delete</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function refreshChapterList() {
+      const list = document.getElementById('chapterList');
+      const editBtn = document.getElementById('editChapterBtn');
+      list.innerHTML = '';
+      editBtn.disabled = true;
+      
+      if (!currentStory || !stories[currentStory]) return;
+      
+      const chapters = stories[currentStory].chapters;
+      if (Object.keys(chapters).length === 0) {
+        list.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">No chapters yet</div>';
+        return;
+      }
+      
+      Object.keys(chapters).forEach(chapterName => {
+        const item = document.createElement('div');
+        item.className = 'chapter-item';
+        if (chapterName === currentChapter) {
+          item.classList.add('active');
+          editBtn.disabled = false;
+        }
+        
+        item.innerHTML = `
+          <span onclick="selectChapter('${chapterName}')">${chapterName}</span>
+          <button class="delete-btn" onclick="deleteChapter('${chapterName}')">Delete</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function selectStory(storyName) {
+      currentStory = storyName;
+      currentChapter = null;
+      
+      // Load story data
+      if (stories[storyName]) {
+        const story = stories[storyName];
+        document.getElementById('storyTitle').value = story.cover ? story.cover.title : storyName;
+        document.getElementById('coverTitle').value = story.cover ? story.cover.title : storyName;
+        document.getElementById('coverImage').value = story.cover ? story.cover.image : '';
+        
+        // Load story characters if they exist
+        if (story.characters) {
+          characters = story.characters;
+          saveCharacters();
+          refreshCharacters();
+          updateCharacterSelect();
+        }
+        
+        updateCoverPreview();
+      }
+      
+      // Switch to story editing mode
+      document.getElementById('mainNav').style.display = 'none';
+      document.getElementById('storyNav').style.display = 'flex';
+      showSection('cover');
+      clearChatDisplay();
+    }
+
+    function selectChapter(chapterName) {
+      currentChapter = chapterName;
+      refreshChapterList();
+    }
+
+    function deleteStory(storyName) {
+      if (confirm(`Delete story "${storyName}"?`)) {
+        delete stories[storyName];
+        if (currentStory === storyName) {
+          currentStory = null;
+          currentChapter = null;
+        }
+        saveStories();
+        refreshStoryList();
+        refreshChapterList();
+        clearChatDisplay();
+      }
+    }
+
+    function deleteChapter(chapterName) {
+      if (confirm(`Delete chapter "${chapterName}"?`)) {
+        delete stories[currentStory].chapters[chapterName];
+        if (currentChapter === chapterName) {
+          currentChapter = null;
+        }
+        saveStories();
+        refreshChapterList();
+        clearChatDisplay();
+      }
+    }
+
+    function loadChapterData() {
+      if (!currentStory || !currentChapter) return;
+      
+      const chapterData = stories[currentStory].chapters[currentChapter];
+      const chatContainer = document.getElementById('chatContainer');
+      chatContainer.innerHTML = '';
+      
+      chapterData.messages.forEach(elementData => {
+        if (elementData.type === 'scene') {
+          const sceneElement = document.createElement('div');
+          sceneElement.className = 'scene-description';
+          sceneElement.innerHTML = `
+            <div class="scene-actions">
+              <button class="action-btn" onclick="editSceneDescription(this)">Edit</button>
+              <button class="action-btn" onclick="deleteSceneDescription(this)">Delete</button>
+            </div>
+            ${elementData.text}
+          `;
+          chatContainer.appendChild(sceneElement);
+        } else {
+          // Ensure timestamp exists for loaded messages
+          if (!elementData.timestamp) {
+            elementData.timestamp = new Date().toLocaleTimeString('en-US', { 
+              hour: '2-digit', 
+              minute: '2-digit',
+              hour12: true 
+            });
+          }
+          createMessageElement(elementData);
+        }
+      });
+      
+      const customization = chapterData.customization || {};
+      if (customization.theme) {
+        document.getElementById('themeSelect').value = customization.theme;
+        applyTheme(customization.theme);
+      }
+      if (customization.font) {
+        document.getElementById('fontSelect').value = customization.font;
+        applyFont(customization.font);
+      }
+      if (customization.background) {
+        document.body.style.backgroundImage = `url('${customization.background}')`;
+        document.getElementById('bgInput').value = customization.background;
+      }
+    }
+
+    function saveCurrentChapter() {
+      if (!currentStory || !currentChapter) {
+        alert('Please select a story and chapter first');
+        return;
+      }
+      
+      const chatContainer = document.getElementById('chatContainer');
+      const elements = [];
+      
+      chatContainer.childNodes.forEach(element => {
+        if (element.classList && element.classList.contains('message-wrapper')) {
+          const characterId = element.dataset.characterId;
+          const bubble = element.querySelector('.bubble');
+          const text = bubble.textContent;
+          const image = bubble.querySelector('img');
+          
+          elements.push({
+            type: 'message',
+            characterId: characterId,
+            text: text,
+            image: image ? image.src : null
+          });
+        } else if (element.classList && element.classList.contains('scene-description')) {
+          elements.push({
+            type: 'scene',
+            text: element.textContent.trim()
+          });
+        }
+      });
+      
+      stories[currentStory].chapters[currentChapter].messages = elements;
+      
+      // Also save current characters and cover data to the story
+      stories[currentStory].characters = [...characters];
+      if (document.getElementById('coverTitle').value || document.getElementById('coverImage').value) {
+        stories[currentStory].cover = {
+          title: document.getElementById('coverTitle').value || currentStory,
+          image: document.getElementById('coverImage').value || ''
+        };
+      }
+      
+      saveStories();
+      alert('Chapter saved successfully!');
+    }
+
+    function saveStories() {
+      localStorage.setItem('chatStories', JSON.stringify(stories));
+    }
+
+    function clearChatDisplay() {
+      document.getElementById('chatContainer').innerHTML = '';
+    }
+
+    function createMessageElement(messageData) {
+      const chat = document.getElementById('chatContainer');
+      const messageWrapper = document.createElement('div');
+      const character = characters.find(char => char.id === messageData.characterId) || characters[0];
+      const side = character.position || 'left';
+      
+      messageWrapper.classList.add('message-wrapper', side);
+      messageWrapper.dataset.characterId = character.id;
+
+      // Create message container with character name and timestamp
+      const messageContainer = document.createElement('div');
+      messageContainer.classList.add('message-container');
+
+      // Character name and timestamp header
+      const messageHeader = document.createElement('div');
+      messageHeader.classList.add('message-header');
+      
+      const characterName = document.createElement('span');
+      characterName.classList.add('character-name-label');
+      characterName.textContent = character.name;
+      
+      const timestamp = document.createElement('span');
+      timestamp.classList.add('message-timestamp');
+      timestamp.textContent = messageData.timestamp || new Date().toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+      
+      if (side === 'right') {
+        messageHeader.appendChild(timestamp);
+        messageHeader.appendChild(characterName);
+      } else {
+        messageHeader.appendChild(characterName);
+        messageHeader.appendChild(timestamp);
+      }
+
+      const avatar = document.createElement('div');
+      avatar.classList.add('avatar');
+      
+      if (character.photo.trim() !== '') {
+        const img = document.createElement('img');
+        img.src = character.photo;
+        img.onerror = function() { avatar.textContent = '👤'; };
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = '👤';
+      }
+
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      
+      if (messageData.image) {
+        const img = document.createElement('img');
+        img.src = messageData.image;
+        img.classList.add('message-image');
+        img.onclick = () => window.open(messageData.image, '_blank');
+        bubble.appendChild(img);
+      }
+      
+      if (messageData.text) {
+        const textNode = document.createTextNode(messageData.text);
+        bubble.appendChild(textNode);
+      }
+
+      const actions = document.createElement('div');
+      actions.classList.add('message-actions');
+      actions.innerHTML = `
+        <button class="action-btn" onclick="editMessage(this)">Edit</button>
+        <button class="action-btn" onclick="deleteMessage(this)">Delete</button>
+      `;
+
+      messageContainer.appendChild(messageHeader);
+      messageContainer.appendChild(bubble);
+      
+      messageWrapper.appendChild(avatar);
+      messageWrapper.appendChild(messageContainer);
+      messageWrapper.appendChild(actions);
+      chat.appendChild(messageWrapper);
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function addBubble() {
+      const text = document.getElementById('chatInput').value;
+      const characterId = document.getElementById('sideSelect').value;
+      
+      if (text.trim() === '' && !pendingImage) return;
+
+      const messageData = {
+        characterId: characterId,
+        text: text,
+        image: pendingImage,
+        timestamp: new Date().toLocaleTimeString('en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit',
+          hour12: true 
+        })
+      };
+      
+      createMessageElement(messageData);
+
+      document.getElementById('chatInput').value = '';
+      pendingImage = null;
+    }
+
+    function handleImageUpload(input) {
+      const file = input.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          pendingImage = e.target.result;
+          alert('Image loaded! Type a message or just click Send to add the image.');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function editMessage(button) {
+      const messageWrapper = button.closest('.message-wrapper');
+      const bubble = messageWrapper.querySelector('.bubble');
+      const textContent = bubble.textContent;
+      
+      editingMessageElement = bubble;
+      document.getElementById('editTextarea').value = textContent;
+      document.getElementById('editModal').classList.add('active');
+    }
+
+    function saveEditedMessage() {
+      if (editingMessageElement) {
+        const newText = document.getElementById('editTextarea').value;
+        const img = editingMessageElement.querySelector('img');
+        
+        editingMessageElement.innerHTML = '';
+        if (img) {
+          editingMessageElement.appendChild(img);
+        }
+        if (newText.trim()) {
+          editingMessageElement.appendChild(document.createTextNode(newText));
+        }
+        
+        closeEditModal();
+      }
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.remove('active');
+      editingMessageElement = null;
+    }
+
+    function deleteMessage(button) {
+      if (confirm('Delete this message?')) {
+        const messageWrapper = button.closest('.message-wrapper');
+        messageWrapper.remove();
+      }
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        addBubble();
+      }
+    }
+
+    function clearChat() {
+      if (confirm('Are you sure you want to clear the entire chat?')) {
+        document.getElementById('chatContainer').innerHTML = '';
+      }
+    }
+
+    function exportStory() {
+      const title = document.getElementById('storyTitle').value || 'My Chat Story';
+      const messages = document.querySelectorAll('.message-wrapper');
+      let story = `${title}\n${'='.repeat(title.length)}\n\n`;
+      
+      messages.forEach(message => {
+        const characterId = message.dataset.characterId;
+        const character = characters.find(char => char.id === characterId);
+        const text = message.querySelector('.bubble').textContent;
+        story += `${character ? character.name : 'Unknown'}: ${text}\n`;
+      });
+      
+      const blob = new Blob([story], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportAsImage() {
+      const chatContainer = document.getElementById('chatContainer');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = chatContainer.offsetWidth * 2;
+      canvas.height = chatContainer.scrollHeight * 2;
+      ctx.scale(2, 2);
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Simple text-based export - for full HTML rendering, you'd need html2canvas library
+      ctx.fillStyle = '#333333';
+      ctx.font = '14px Roboto, sans-serif';
+      
+      let y = 20;
+      const messages = document.querySelectorAll('.message-wrapper');
+      messages.forEach(message => {
+        const characterId = message.dataset.characterId;
+        const character = characters.find(char => char.id === characterId);
+        const text = message.querySelector('.bubble').textContent;
+        const line = `${character ? character.name : 'Unknown'}: ${text}`;
+        
+        ctx.fillText(line, 20, y);
+        y += 25;
+      });
+      
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'chat_story.png';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    function showVideoExportModal() {
+      document.getElementById('videoExportModal').classList.add('active');
+      
+      // Update speed displays
+      document.getElementById('messageSpeed').oninput = function() {
+        document.getElementById('speedValue').textContent = this.value + 's';
+      };
+      
+      document.getElementById('sceneSpeed').oninput = function() {
+        document.getElementById('sceneSpeedValue').textContent = this.value + 's';
+      };
+    }
+
+    function closeVideoExportModal() {
+      document.getElementById('videoExportModal').classList.remove('active');
+    }
+
+    function previewVideoExport() {
+      const messageSpeed = parseFloat(document.getElementById('messageSpeed').value);
+      const sceneSpeed = parseFloat(document.getElementById('sceneSpeed').value);
+      const showTyping = document.getElementById('typingAnimation').checked;
+      
+      // Create preview window
+      const previewWindow = window.open('', '_blank', 'width=400,height=600');
+      previewWindow.document.write(`
+        <html>
+          <head>
+            <title>Video Preview</title>
+            <style>
+              body { font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; background: #f0f0f0; }
+              .preview-container { background: white; border-radius: 15px; padding: 15px; height: 500px; overflow: hidden; }
+              .preview-message { margin: 10px 0; opacity: 0; animation: fadeIn 0.5s ease forwards; }
+              .preview-bubble { padding: 10px 15px; border-radius: 20px; max-width: 70%; }
+              .preview-left { background: #e8e8e8; }
+              .preview-right { background: #007bff; color: white; margin-left: auto; }
+              .preview-scene { background: #f8f9fa; padding: 15px; margin: 15px 0; border-left: 4px solid #6f42c1; font-style: italic; color: #6f42c1; text-align: center; }
+              .typing-indicator { display: none; padding: 10px; background: #ddd; border-radius: 20px; width: 50px; }
+              .typing-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #999; margin: 0 2px; animation: typing 1.4s infinite; }
+              .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+              .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+              @keyframes fadeIn { to { opacity: 1; } }
+              @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-10px); } }
+            </style>
+          </head>
+          <body>
+            <h3>Video Preview</h3>
+            <div class="preview-container" id="previewContainer"></div>
+            <div style="margin-top: 10px;">
+              <button onclick="window.close()">Close Preview</button>
+            </div>
+          </body>
+        </html>
+      `);
+      
+      setTimeout(() => {
+        animatePreview(previewWindow, messageSpeed, sceneSpeed, showTyping);
+      }, 100);
+    }
+
+    function animatePreview(previewWindow, messageSpeed, sceneSpeed, showTyping) {
+      const container = previewWindow.document.getElementById('previewContainer');
+      const chatContainer = document.getElementById('chatContainer');
+      const elements = Array.from(chatContainer.children);
+      let currentIndex = 0;
+
+      function showNextElement() {
+        if (currentIndex >= elements.length) {
+          previewWindow.document.body.innerHTML += '<p style="text-align: center; color: green; font-weight: bold;">Preview Complete!</p>';
+          return;
+        }
+
+        const element = elements[currentIndex];
+        let delay = messageSpeed * 1000;
+
+        if (element.classList.contains('scene-description')) {
+          const sceneDiv = previewWindow.document.createElement('div');
+          sceneDiv.className = 'preview-message preview-scene';
+          sceneDiv.textContent = element.textContent.trim();
+          container.appendChild(sceneDiv);
+          delay = sceneSpeed * 1000;
+        } else if (element.classList.contains('message-wrapper')) {
+          const character = characters.find(char => char.id === element.dataset.characterId);
+          const bubble = element.querySelector('.bubble');
+          const isRight = element.classList.contains('right');
+
+          if (showTyping && bubble.textContent.trim()) {
+            const typingDiv = previewWindow.document.createElement('div');
+            typingDiv.className = 'preview-message';
+            typingDiv.innerHTML = `
+              <div class="typing-indicator" style="display: block; ${isRight ? 'margin-left: auto;' : ''}">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+              </div>
+            `;
+            container.appendChild(typingDiv);
+
+            setTimeout(() => {
+              typingDiv.remove();
+              
+              const messageDiv = previewWindow.document.createElement('div');
+              messageDiv.className = 'preview-message';
+              messageDiv.innerHTML = `
+                <div class="preview-bubble ${isRight ? 'preview-right' : 'preview-left'}">
+                  ${bubble.textContent}
+                </div>
+              `;
+              container.appendChild(messageDiv);
+              container.scrollTop = container.scrollHeight;
+            }, 1000);
+            
+            delay += 1000;
+          } else {
+            const messageDiv = previewWindow.document.createElement('div');
+            messageDiv.className = 'preview-message';
+            messageDiv.innerHTML = `
+              <div class="preview-bubble ${isRight ? 'preview-right' : 'preview-left'}">
+                ${bubble.textContent}
+              </div>
+            `;
+            container.appendChild(messageDiv);
+          }
+        }
+
+        container.scrollTop = container.scrollHeight;
+        currentIndex++;
+        setTimeout(showNextElement, delay);
+      }
+
+      showNextElement();
+    }
+
+    function startVideoExport() {
+      alert('Advanced video export feature coming soon! This will create a full animated video with your custom timing settings.');
+      closeVideoExportModal();
+    }
+
+    function previousChapter() {
+      if (!currentStory) return;
+      
+      const chapters = Object.keys(stories[currentStory].chapters);
+      const currentIndex = chapters.indexOf(currentChapter);
+      
+      if (currentIndex > 0) {
+        currentChapter = chapters[currentIndex - 1];
+        loadChapterData();
+        refreshChapterList();
+        updateChapterNavigation();
+      }
+    }
+
+    function nextChapter() {
+      if (!currentStory) return;
+      
+      const chapters = Object.keys(stories[currentStory].chapters);
+      const currentIndex = chapters.indexOf(currentChapter);
+      
+      if (currentIndex < chapters.length - 1) {
+        currentChapter = chapters[currentIndex + 1];
+        loadChapterData();
+        refreshChapterList();
+        updateChapterNavigation();
+      }
+    }
+
+    function updateChapterNavigation() {
+      if (!currentStory || !currentChapter) {
+        document.getElementById('prevChapterBtn').disabled = true;
+        document.getElementById('nextChapterBtn').disabled = true;
+        return;
+      }
+      
+      const chapters = Object.keys(stories[currentStory].chapters);
+      const currentIndex = chapters.indexOf(currentChapter);
+      
+      document.getElementById('prevChapterBtn').disabled = currentIndex <= 0;
+      document.getElementById('nextChapterBtn').disabled = currentIndex >= chapters.length - 1;
+    }
+
+    function handleBackgroundUpload(input) {
+      const file = input.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const dataUrl = e.target.result;
+          document.body.style.backgroundImage = `url('${dataUrl}')`;
+          document.getElementById('bgInput').value = dataUrl;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function applyFont(fontValue) {
+      document.body.classList.remove('font-roboto', 'font-indie', 'font-poppins', 'font-dancing', 'font-courier');
+      document.body.classList.add('font-' + fontValue);
+    }
+
+    function applyTheme(themeValue) {
+      document.body.classList.remove('theme-pastel', 'theme-night', 'theme-ocean', 'theme-sunset', 'theme-forest', 'theme-cosmic', 'theme-retro');
+      if (themeValue !== 'default') {
+        document.body.classList.add('theme-' + themeValue);
+      }
+    }
+
+    document.getElementById('fontSelect').addEventListener('change', function() {
+      applyFont(this.value);
+    });
+
+    document.getElementById('themeSelect').addEventListener('change', function() {
+      applyTheme(this.value);
+    });
+
+    function updateBackground() {
+      const url = document.getElementById('bgInput').value;
+      if (url.trim() !== '') {
+        document.body.style.backgroundImage = `url('${url}')`;
+      }
+    }
+
+    function setPresetBackground(preset) {
+      const backgrounds = {
+        nature: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=80',
+        city: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=80',
+        space: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=80',
+        beach: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=80'
+      };
+      
+      document.body.style.backgroundImage = `url('${backgrounds[preset]}')`;
+      document.getElementById('bgInput').value = backgrounds[preset];
+    }
+
+    function saveCustomization() {
+      const customization = {
+        theme: document.getElementById('themeSelect').value,
+        font: document.getElementById('fontSelect').value,
+        background: document.getElementById('bgInput').value,
+        characters: characters
+      };
+      
+      if (currentStory && currentChapter) {
+        stories[currentStory].chapters[currentChapter].customization = customization;
+        saveStories();
+        alert('Customization saved to current chapter!');
+      } else {
+        localStorage.setItem('defaultCustomization', JSON.stringify(customization));
+        alert('Default customization saved!');
+      }
+    }
+
+    function loadCustomization() {
+      let customization;
+      
+      if (currentStory && currentChapter && stories[currentStory].chapters[currentChapter].customization) {
+        customization = stories[currentStory].chapters[currentChapter].customization;
+      } else {
+        customization = JSON.parse(localStorage.getItem('defaultCustomization'));
+      }
+      
+      if (customization) {
+        document.getElementById('themeSelect').value = customization.theme || 'default';
+        document.getElementById('fontSelect').value = customization.font || 'roboto';
+        document.getElementById('bgInput').value = customization.background || '';
+        
+        if (customization.characters) {
+          characters = customization.characters;
+          saveCharacters();
+          refreshCharacters();
+          updateCharacterSelect();
+        }
+        
+        applyTheme(customization.theme || 'default');
+        applyFont(customization.font || 'roboto');
+        
+        if (customization.background) {
+          document.body.style.backgroundImage = `url('${customization.background}')`;
+        }
+        
+        alert('Customization loaded!');
+      } else {
+        alert('No saved customization found!');
+      }
+    }
+
+    // Initialize
+    document.body.classList.add('font-roboto');
+    refreshCharacters();
+    updateCharacterSelect();
+    refreshStoryList();
+  </script>
+</body>
+</html>
