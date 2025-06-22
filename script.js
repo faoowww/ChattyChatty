@@ -13,3 +13,7 @@ function addBubble() {
   document.getElementById('chatInput').value = "";
   chat.scrollTop = chat.scrollHeight;
 }
+function getCurrentTime() {
+  const now = new Date();
+  return now.toTimeString().slice(0, 5); // Format HH:MM
+}
